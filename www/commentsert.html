@@ -9,6 +9,30 @@
     <link href="css/jquery.mobile-1.4.5.min.css" rel="stylesheet" />
     <script src="scripts/jquery.mobile-1.4.5.min.js"></script>
     <script src="scripts/jquery-2.1.3.min.js"></script>
+    <style>
+        table {
+            border-collapse: collapse;
+            border-spacing: 0;
+            border: 1px solid #bbb;
+        }
+
+        td, th {
+            border-top: 1px solid #ddd;
+            padding: 4px 8px;
+        }
+
+        tbody tr:nth-child(even) td {
+            background-color: #eee;
+        }
+
+        @media screen and (max-width: 640px) {
+            table {
+                overflow-x: auto;
+                display: block;
+            }
+        }
+    </style>
+
 </head>
 <body>
     <div data-role="page" id="detail">
@@ -30,9 +54,9 @@
                 DateRegister = this.DateRegister;
                 //*****************************
                 html = html.trim() + '<tr>';
-                html = html.trim() + ' <th>' + Status + '</th>';
-                html = html.trim() + ' <td>' + Comments + '</td>';
-                html = html.trim() + ' <td>' + DateRegister + '</td>';
+                html = html.trim() + ' <td style="font-size:11px;font-weight:normal;">' + Status + '</td>';
+                html = html.trim() + ' <td style="font-size:11px;font-weight:normal;">' + Comments + '</td>';
+                html = html.trim() + ' <td style="font-size:11px;font-weight:normal;">' + DateRegister + '</td>';
                 html = html.trim() + ' </tr>';
                 //*****************************
 
@@ -82,12 +106,12 @@
                         //******************************
                         $('#resultsComments').html('');
                         html = '';
-                        html = html.trim() + '<table class="ui-responsive" id="ERT-table" data-role="table" data-mode="reflow">';
+                        html = html.trim() + '<table id="ERT-detailtable" style="width:100%;">';
                         html = html.trim() + '<thead>';
-                        html = html.trim() + '<tr class="ui-bar-d">';
-                        html = html.trim() + ' <th data-priority="2">Status</th>';
-                        html = html.trim() + ' <th data-priority="3">Comments</th>';
-                        html = html.trim() + ' <th data-priority="1">DateTime</th>';
+                        html = html.trim() + '<tr>';
+                        html = html.trim() + ' <th style="background-color:#0065B3;color:white;text-align:center;font-size:11px;font-weight:normal;">Status</th>';
+                        html = html.trim() + ' <th style="background-color:#0065B3;color:white;text-align:center;font-size:11px;font-weight:normal;">Comments</th>';
+                        html = html.trim() + ' <th style="background-color:#0065B3;color:white;text-align:center;font-size:11px;font-weight:normal;">DateTime</th>';
                         html = html.trim() + '</tr>';
                         html = html.trim() + '</thead>';
                         html = html.trim() + '<tbody>';

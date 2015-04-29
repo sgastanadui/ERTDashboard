@@ -5,6 +5,24 @@
     <link href="css/jquery.mobile-1.4.5.min.css" rel="stylesheet" />
     <script src="scripts/jquery-2.1.3.min.js"></script>
     <script src="scripts/jquery.mobile-1.4.5.min.js"></script>
+    <style>
+        table {
+            border-collapse: collapse;
+            border-spacing: 0;
+            border: 1px solid #bbb;
+        }
+        td,th {
+            border-top: 1px solid #ddd;
+            padding: 4px 8px;
+        }
+        tbody tr:nth-child(even)  td { background-color: #eee; }
+        @media screen and (max-width: 640px) {
+	        table {
+		        overflow-x: auto;
+		        display: block;
+	        }
+        }
+    </style>
 </head>
 <body>
     <div id="newpage" data-role="page">
@@ -28,14 +46,15 @@
                 Level = this.Level;
                 //*****************************
                 html = html.trim() + '<tr>';
-                html = html.trim() + ' <th>' + Rol + '</th>';
-                html = html.trim() + ' <td>';
-                html = html.trim() + ' <a class="ui-btn ui-corner-all ui-shadow ui-btn-inline" href="commentsert.html?IdCompany=' + IdCompany + '&IdContact=' + IdContact + '" data-transition="none">' + Name + '</a>';
+                html = html.trim() + ' <td style="font-size:11px;font-weight:normal;">';
+                //html = html.trim() + ' <a class="ui-btn ui-corner-all ui-shadow ui-btn-inline" href="commentsert.html?IdCompany=' + IdCompany + '&IdContact=' + IdContact + '" data-transition="none">' + Name.trim() + '</a>';
+                html = html.trim() + ' <a href="commentsert.html?IdCompany=' + IdCompany + '&IdContact=' + IdContact + '" data-transition="none">' + Name.trim() + '</a>';
                 html = html.trim() + ' </td>';
-                html = html.trim() + ' <td>' + Email + '</td>';
-                html = html.trim() + ' <td>' + Phone + '</td>';
-                html = html.trim() + ' <td>' + Cell + '</td>';
-                html = html.trim() + ' <td>' + Status + '</td>';
+                html = html.trim() + ' <td style="font-size:11px;font-weight:normal;">' + Rol.trim() + '</td>';
+                html = html.trim() + ' <td style="font-size:11px;font-weight:normal;">' + Email.trim() + '</td>';
+                html = html.trim() + ' <td style="font-size:11px;font-weight:normal;">' + Phone.trim() + '</td>';
+                html = html.trim() + ' <td style="font-size:11px;font-weight:normal;">' + Cell.trim() + '</td>';
+                html = html.trim() + ' <td style="font-size:11px;font-weight:normal;">' + Status.trim() + '</td>';
                 html = html.trim() + ' </tr>';
                 //*****************************
             };
@@ -94,20 +113,17 @@
                         //******************************
                         $('#results').html('');
                         html = '';
-                        html = html.trim() + '<table data-role="table" id="table-custom-1" data-mode="columntoggle" ';
-                        html = html.trim() + 'class="ui-body-d ui-shadow table-stripe ui-responsive" data-column-btn-theme="b" ';
-                        html = html.trim() + 'data-column-btn-text="Columns to display..." data-column-popup-theme="a">';
-
+                        html = html.trim() + '<table id="ERT-table" style="width:100%;">';
                         //$("#results").append('<table class="ui-responsive" id="ERT-table" data-role="table" data-mode="reflow" style="font-size:9pt;font-weight:normal;">');
                         //$("#results").append('<table id="ERT-table" style="border:solid #b3d1e7 1px;border-collapse:collapse;"');
                         html = html.trim() + '<thead>';
-                        html = html.trim() + '<tr class="ui-bar-d">';
-                        html = html.trim() + ' <th data-priority="2" >Rol</th>';
-                        html = html.trim() + ' <th data-priority="3" >Name</th>';
-                        html = html.trim() + ' <th data-priority="1" >Email</th>';
-                        html = html.trim() + ' <th data-priority="5" >Phone</th>';
-                        html = html.trim() + ' <th data-priority="6" >Cell</th>';
-                        html = html.trim() + ' <th data-priority="7" >Status</th>';
+                        html = html.trim() + '<tr>';
+                        html = html.trim() + ' <th style="background-color:#0065B3;color:white;text-align:center;font-size:11px;font-weight:normal;">Name</th>';
+                        html = html.trim() + ' <th style="background-color:#0065B3;color:white;text-align:center;font-size:11px;font-weight:normal;">Role</th>';
+                        html = html.trim() + ' <th style="background-color:#0065B3;color:white;text-align:center;font-size:11px;font-weight:normal;">Email</th>';
+                        html = html.trim() + ' <th style="background-color:#0065B3;color:white;text-align:center;font-size:11px;font-weight:normal;">Phone</th>';
+                        html = html.trim() + ' <th style="background-color:#0065B3;color:white;text-align:center;font-size:11px;font-weight:normal;">Cell</th>';
+                        html = html.trim() + ' <th style="background-color:#0065B3;color:white;text-align:center;font-size:11px;font-weight:normal;">Status</th>';
                         html = html.trim() + '</tr>';
                         html = html.trim() + '</thead>';
                         html = html.trim() + '<tbody>';
@@ -170,7 +186,7 @@
                     }
                 });
 
-
+                $("#btnSave").off("click");
                 $("#btnSave").click(function () {
                     //************************************************
                     var IdCompany = window.localStorage["IdCompany"];
@@ -264,7 +280,7 @@
 
             <div class="ui-content" id="one">
 
-                <div id="results"></div>
+                <div id="results" style="width:100%"></div>
                 <!--<table data-role="table" id="table-custom-2" data-mode="columntoggle" class="ui-body-d ui-shadow table-stripe ui-responsive" data-column-btn-theme="b" data-column-btn-text="Columns to display..." data-column-popup-theme="a">
                     <thead>
                         <tr class="ui-bar-d">

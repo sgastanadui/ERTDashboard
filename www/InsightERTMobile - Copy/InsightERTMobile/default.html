@@ -1,0 +1,328 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <link href="css/jquery.mobile-1.4.5.min.css" rel="stylesheet" />
+    <script src="scripts/jquery-2.1.3.min.js"></script>
+    <script src="scripts/jquery.mobile-1.4.5.min.js"></script>
+</head>
+<body>
+    <div id="newpage" data-role="page">
+
+        <script type="text/javascript">
+            var html = '';
+
+            populateMember = function (data) {
+                //*****************************
+                var IdCompany, IdInsightBCP, IdContact, Rol, Name, Email, Phone, Cell, Status, Level;
+                //*****************************
+                IdCompany = this.IdCompany;
+                IdInsightBCP = this.IdInsightBCP;
+                IdContact = this.IdContact;
+                Rol = this.Rol;
+                Name = this.Name;
+                Email = this.Email;
+                Phone = this.Phone;
+                Cell = this.Cell;
+                Status = this.Status;
+                Level = this.Level;
+                //*****************************
+                html = html.trim() + '<tr>';
+                html = html.trim() + ' <th>' + Rol + '</th>';
+                html = html.trim() + ' <td>';
+                html = html.trim() + ' <a class="ui-btn ui-corner-all ui-shadow ui-btn-inline" href="commentsert.html?IdCompany=' + IdCompany + '&IdContact=' + IdContact + '" data-transition="none">' + Name + '</a>';
+                html = html.trim() + ' </td>';
+                html = html.trim() + ' <td>' + Email + '</td>';
+                html = html.trim() + ' <td>' + Phone + '</td>';
+                html = html.trim() + ' <td>' + Cell + '</td>';
+                html = html.trim() + ' <td>' + Status + '</td>';
+                html = html.trim() + ' </tr>';
+                //*****************************
+            };
+
+            populateDropdown = function (data) {
+                var IdStatus, Status;
+                IdStatus = this.IdStatus;
+                Status = this.Status;
+                $("#select_item")
+                    .append($("<option></option>")
+                    .val(IdStatus)
+                    .html(Status)
+                    .attr("title", Status));
+            };
+
+            $("#newpage").bind("pageshow", function (event) {
+
+                var IdCompany = window.localStorage["IdCompany"];
+                var Companyname = window.localStorage["CompanyName"];
+                var ContactName = window.localStorage["ContactName"];
+
+                console.log('IdCompany: ' + IdCompany);
+                console.log('Companyname: ' + Companyname);
+                console.log('ContactName: ' + ContactName);
+
+                $("#span2").html("" + Companyname + "");
+                $("#spanContact").html("" + ContactName + "");
+
+                var wcfServiceUrl = "http://23.253.204.98/wcfphonegap/AutenticationMobile.svc/";
+                //var wcfServiceUrl = "http://localhost:10786/AutenticationMobile.svc/";
+
+                var urlk1 = wcfServiceUrl + "ListMember?IdCompany=" + IdCompany + "&TypeMember=2&IdInsightBCP=-1";
+
+                $.ajax({
+                    cache: true,
+                    url: urlk1,
+                    crossDomain: true,
+                    data: "{ IdCompany: " + IdCompany + ", TypeMember: 2, IdInsightBCP: -1 }",
+                    type: "GET",
+                    jsonpCallback: "lsobj",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "jsonp",
+                    beforeSend: function () {
+                        $("#imgAjaxLoader").show();
+                    },
+                    error: function (xhr, textStatus, err) {
+                        var mensaje = "readyState: " + xhr.readyState + "\n";
+                        mensaje = mensaje + "responseText: " + xhr.responseText + "\n";
+                        mensaje = mensaje + "status: " + xhr.status + "\n";
+                        mensaje = mensaje + "text status: " + textStatus + "\n";
+                        mensaje = mensaje + "error: " + err + "\n";
+                        alert(mensaje);
+                        $('#results').html("");
+                    },
+                    success: function (obj) {
+                        //******************************
+                        $('#results').html('');
+                        html = '';
+                        html = html.trim() + '<table data-role="table" id="table-custom-1" data-mode="columntoggle" ';
+                        html = html.trim() + 'class="ui-body-d ui-shadow table-stripe ui-responsive" data-column-btn-theme="b" ';
+                        html = html.trim() + 'data-column-btn-text="Columns to display..." data-column-popup-theme="a">';
+
+                        //$("#results").append('<table class="ui-responsive" id="ERT-table" data-role="table" data-mode="reflow" style="font-size:9pt;font-weight:normal;">');
+                        //$("#results").append('<table id="ERT-table" style="border:solid #b3d1e7 1px;border-collapse:collapse;"');
+                        html = html.trim() + '<thead>';
+                        html = html.trim() + '<tr class="ui-bar-d">';
+                        html = html.trim() + ' <th data-priority="2" >Rol</th>';
+                        html = html.trim() + ' <th data-priority="3" >Name</th>';
+                        html = html.trim() + ' <th data-priority="1" >Email</th>';
+                        html = html.trim() + ' <th data-priority="5" >Phone</th>';
+                        html = html.trim() + ' <th data-priority="6" >Cell</th>';
+                        html = html.trim() + ' <th data-priority="7" >Status</th>';
+                        html = html.trim() + '</tr>';
+                        html = html.trim() + '</thead>';
+                        html = html.trim() + '<tbody>';
+                        //******************************
+                        $.each(obj.ListMemberResult, populateMember);
+                        //******************************
+                        html = html.trim() + '</tbody>';
+                        html = html.trim() + '</table>';
+                        $("#results").append(html.trim());
+                        //console.log('html: ' + html.trim());
+                        //alert($("#results").html())
+                        //******************************
+                        //alert(obj.ListMemberResult);
+                    },
+                    complete: function () {
+                        $("#imgAjaxLoader").hide();
+                    }
+                });
+
+
+
+                urlk1 = wcfServiceUrl + "ListStatusERT?IdCompany=" + IdCompany;
+
+                $.ajax({
+                    cache: true,
+                    url: urlk1,
+                    crossDomain: true,
+                    data: "{ IdCompany: " + IdCompany + " }",
+                    type: "GET",
+                    jsonpCallback: "lsobjStatus",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "jsonp",
+                    beforeSend: function () {
+                        $("#imgAjaxLoader").show();
+                    },
+                    error: function (xhr, textStatus, err) {
+                        var mensaje = "readyState: " + xhr.readyState + "\n";
+                        mensaje = mensaje + "responseText: " + xhr.responseText + "\n";
+                        mensaje = mensaje + "status: " + xhr.status + "\n";
+                        mensaje = mensaje + "text status: " + textStatus + "\n";
+                        mensaje = mensaje + "error: " + err + "\n";
+                        alert(mensaje);
+                        $('#select_item').html("");
+                    },
+                    success: function (obj) {
+                        //******************************
+                        $('#select_item').html("");
+                        //******************************
+                        $("#select_item")
+                            .append($("<option selected='selected'></option>")
+                            .val('-1')
+                            .html('Select')
+                            .attr("title", 'Select'));
+                        //******************************
+                        $.each(obj.ListStatusERTResult, populateDropdown);
+                        //******************************
+                    },
+                    complete: function () {
+                        $("#imgAjaxLoader").hide();
+                    }
+                });
+
+
+                $("#btnSave").click(function () {
+                    //************************************************
+                    var IdCompany = window.localStorage["IdCompany"];
+                    var IdContact = window.localStorage["IdContact"];
+                    //************************************************
+                    if ($("#select_item").val().trim() == "-1") {
+                        alert("Select Status");
+                        return false;
+                    }
+                    //************************************************
+                    if ($("#textarea-1").val().trim() == "") {
+                        alert("Enter Comments");
+                        return false;
+                    }
+                    //************************************************
+                    //wcfServiceUrl = "https://www.chancesrmis.com/wcfphonegap/AutenticationMobile.svc/";
+                    wcfServiceUrl = "http://23.253.204.98/wcfphonegap/AutenticationMobile.svc/";
+                    //wcfServiceUrl = "http://localhost:10786/AutenticationMobile.svc/";
+
+                    //var urlk1 = wcfServiceUrl + "Login?UserName=" + $("#txtUsername").val() + "&Password=" + $("#txtPassword").val() + "";
+                    var urlk1 = wcfServiceUrl + "SaveCommentsERT?IdCompany=" + IdCompany + "&IdContact=" + IdContact + "&IdStatus=" + $("#select_item").val() + "&Comments=" + $("#textarea-1").val() + "";
+
+                    $.ajax({
+                        cache: false,
+                        url: urlk1,
+                        crossDomain: true,
+                        data: "{ IdCompany: " + IdCompany + ", IdContact: " + IdContact + ", IdStatus: " + $("#select_item").val() + ", Comments: " + $("#textarea-1").val() + " }",
+                        type: "GET",
+                        jsonpCallback: "RowSaved",
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "jsonp",
+                        beforeSend: function () {
+                            $("#imgAjaxLoader").show();
+                        },
+                        error: function (xhr, textStatus, err) {
+                            var mensaje = "readyState: " + xhr.readyState + "\n";
+                            mensaje = mensaje + "responseText: " + xhr.responseText + "\n";
+                            mensaje = mensaje + "status: " + xhr.status + "\n";
+                            mensaje = mensaje + "text status: " + textStatus + "\n";
+                            mensaje = mensaje + "error: " + err + "\n";
+                            alert(mensaje);
+                            $('#results').html("");
+                        },
+                        success: function (data) {
+
+                            if (data.SaveCommentsERTResult == true) {
+                                //*************************
+                                alert('sucess')
+                                //*************************
+                                $("#select_item").val('Select');
+                                $("#textarea-1").val('');
+                                //*************************
+                                var wpurl = 'commentsert.html?IdCompany=' + IdCompany + '&IdContact=' + IdContact + '';
+                                //*************************
+                                $("#popupDetail").attr('href', wpurl)
+                                console.log('wpurl: ' + wpurl);
+                                $("#popupDetail").click();
+                                //*************************
+                                //$.mobile.changePage("default.html");
+                                //window.location.href = 'default.html';
+                            } else {
+                                alert('fail')
+                            }
+
+                        },
+                        complete: function () {
+                            $("#imgAjaxLoader").hide();
+                        }
+                    });
+
+                });
+
+
+            });
+
+        </script>
+
+        <div data-role="header" data-position="fixed" style="background-color:#0065B3;color:white;font-size:11px;font-weight:normal;">
+            <br /><h1 id="span2"></h1>
+        </div>
+
+        <!--<div data-role="content" style="background-color:white;">-->
+
+        <div data-role="tabs">
+            <div data-role="navbar">
+                <ul>
+                    <li><a href="#one" data-ajax="true" data-theme="a">ERT Dashboard</a></li>
+                    <li><a href="#two" data-ajax="false" data-theme="a">Add Comments</a></li>
+                </ul>
+            </div>
+
+            <div class="ui-content" id="one">
+
+                <div id="results"></div>
+                <!--<table data-role="table" id="table-custom-2" data-mode="columntoggle" class="ui-body-d ui-shadow table-stripe ui-responsive" data-column-btn-theme="b" data-column-btn-text="Columns to display..." data-column-popup-theme="a">
+                    <thead>
+                        <tr class="ui-bar-d">
+                            <th data-priority="2">Rol</th>
+                            <th>Name</th>
+                            <th data-priority="3">Email</th>
+                            <th data-priority="1">Phone</th>
+                            <th data-priority="5">Cell</th>
+                            <th data-priority="6">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th>Incident Commander (IC)</th>
+                            <td><a class="ui-btn ui-corner-all ui-shadow ui-btn-inline" href="commentsert.html?IdContact=23" data-transition="none">Al Avila</a></td>
+                            <td>arm@insightERM.com</td>
+                            <td>863-965-5309</td>
+                            <td>863-287-6626</td>
+                            <td>Not Responding</td>
+                        </tr>
+                        <tr>
+                            <th>Liaison Officer (LO)</th>
+                            <td><a class="ui-btn ui-corner-all ui-shadow ui-btn-inline" href="commentsert.html?IdContact=32" data-transition="none">Ed Priest</a></td>
+                            <td>arm@chancesrmis.com</td>
+                            <td>863-965-5920</td>
+                            <td>352-267-9941</td>
+                            <td>Not Responding</td>
+                        </tr>
+                    </tbody>
+                </table>-->
+            </div>
+
+            <div class="ui-content" id="two">
+                <h1 id="spanContact"></h1>
+                <div data-role="fieldcontain" class="ui-hide-label">
+                    <label for="Status">Status:</label>
+                    <select id="select_item">
+                        <option selected="selected" value="-1">Select</option>
+                    </select>
+                </div>
+                <div data-role="fieldcontain" class="ui-hide-label">
+                    <label for="textarea-1">Comments:</label>
+                    <textarea name="textarea-1" id="textarea-1"></textarea>
+                </div>
+                <!--<button class="ui-btn ui-btn-inline" id="btnSave" name="btnSave">Save</button>-->
+                <input type="button" value="Save" id="btnSave">
+            </div>
+
+        </div>
+        <div id="loading"></div>
+        <img id="imgAjaxLoader" class="ajaxLoader" src="images/ajax-loader.gif" />
+        <a class="ui-btn ui-corner-all ui-shadow ui-btn-inline" id="popupDetail" href="commentsert.html?IdContact=23" data-transition="none" style="display:none;"></a>
+        <!--</div>-->
+
+        <div class="jqm-footer" data-role="footer" data-position="fixed" data-tap-toggle="false" style="background-color:#0065B3;color:white;text-align:center;font-size:11px;font-weight:normal;">
+            <p>©ERT Insight Risk Technologies,LC <span class="jqm-version"></span></p>
+        </div>
+
+    </div>
+</body>
+</html>
